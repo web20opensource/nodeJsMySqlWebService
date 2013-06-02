@@ -1,0 +1,24 @@
+CREATE DATABASE resultados_2011;
+USE resultados_2011;
+
+CREATE TABLE resultados_2011(
+  carrera varchar(100),
+  matricula char(9),
+  puntaje char(3),
+  status char(1),
+  PRIMARY KEY (matricula)
+) CHARACTER SET utf8 COLLATE utf8_general_ci type=InnoDB;
+
+GRANT ALL PRIVILEGES ON resultados_2011 TO 'nodejs'@'localhost' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON resultados_2011 TO 'nodejs'@'%' WITH GRANT OPTION;
+SET PASSWORD FOR 'nodejs'@'%' = PASSWORD('123456');
+SET PASSWORD FOR 'nodejs'@'localhost' = PASSWORD('123456');
+
+INSERT INTO resultados_2011 VALUES ('GASTRONOMIA','201112345','772','A');
+INSERT INTO resultados_2011 VALUES ('GASTRONOMIA','201141212','750','A');
+INSERT INTO resultados_2011 VALUES ('GASTRONOMIA','201141253','276','N');
+INSERT INTO resultados_2011 VALUES ('GASTRONOMIA','201146464','784','A');
+INSERT INTO resultados_2011 VALUES ('GASTRONOMIA','201198765','566','N');
+INSERT INTO resultados_2011 VALUES ('GASTRONOMIA','201155544','759','A');
+INSERT INTO resultados_2011 VALUES ('GASTRONOMIA','201177788','771','A');
+INSERT INTO resultados_2011 VALUES ('GASTRONOMIA','201165542','599','N');

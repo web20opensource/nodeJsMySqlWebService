@@ -43,8 +43,6 @@ http.createServer(function (req, res) {
         body = result[0]
         if (err) throw err;
         else {
-                //console.log('Row next to be json');
-                //console.log(JSON.stringify(result[0]));
                 res.writeHead(200, {'Content-Type': 'application/json'});
                 if (typeof body === "undefined")
                     response = '[{}]';
