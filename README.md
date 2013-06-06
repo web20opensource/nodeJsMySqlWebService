@@ -1,5 +1,6 @@
 nodeJsMySqlWebService
 =====================
+Create a server that waits for clients for connection. Then, clients query the Mysql DB. Finally server sends response in json format
 
 ##Installation
 
