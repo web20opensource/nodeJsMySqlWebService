@@ -6,7 +6,8 @@ var url = require('url');
 var id;
 //response
 var body;
-
+//# of responses sucessfully attended
+var nResponses=0;
 //mysql + conf
 
 var _mysql = require('mysql');
@@ -15,17 +16,17 @@ var PORT = 3306;
 var MYSQL_USER = 'root';
 var MYSQL_PASS = '';
 */
-var DATABASE = 'resultados_2011';
-var TABLE = 'resultados_2011';
+var DATABASE = 'resultados_2013';
+var TABLE = 'resultados_2013';
 
 
 var pool  = _mysql.createPool({
   host     : 'localhost',
   user     : 'root',
-  password : ''
+  password : '',
+  database : 'resultados_2013'
+  //,debug : 'true'
 });
-
-
 
 
 /*
@@ -48,47 +49,46 @@ var mysql = _mysql.createConnection({
 // createServer + doQuery
 http.createServer(function (req, res) {
   
-    //get id from url
-    var url_parts = url.parse(req.url, true);
-    var id = url_parts.query.id; 
-
     pool.getConnection(function(err, connection) {
         
-        /*if (typeof err  !== 'undefined'){
-            console.log('ok');
-            console.dir(typeof err);
+        if (err)
+        {
+            res.write('[{connectionError}]');
+            res.end();
+            console.log(err);
+            return;
         }
-        else{
-            console.log('shit!!!');
-            console.dir(typeof err);
+        
+        if (!connection){
+            res.write('[{connectionError}]');
+            res.end();
+            console.log(connection.toString());
+            return;
         }
-        return;*/
+
+        //get id from url_parts
+        var url_parts = url.parse(req.url, true);
+        var id = url_parts.query.id; 
 
         connection.query('use ' + DATABASE);
-        connection.query('select * from ' + TABLE + ' where matricula ="'+id+'";',
+        connection.query('select * from ' + TABLE + ' where matricula ='+_mysql.escape(id)+';',
             function(err, result, fields) {
-               /* if (typeof err === 'undefined')
-                    console.log(err.keys.length);
-                else
-                    console.log(err.keys.length);
-                return;*/
-
-                body = result
-                //console.log(result.length);
-                //return;
-                if (err) throw err;
+                if (err){ console.log("error");throw err;}
                 else {
-                        //console.log('Row next to be json');
-                        //console.log(JSON.stringify(result[0]));
+                        body = result;
                         res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
                         if (typeof body === "undefined")
                             response = '[{}]';
-                        else
-                            response = '['+JSON.stringify(body)+']';
-                        res.write(response);
+                        else{
+                            response = JSON.stringify(body);
+                            console.log('nResponses: ' + nResponses + ' ' + JSON.stringify(body));
+                            res.write(response);
+                            console.log('nResponses: '+nResponses);
+                        }    
                         res.end();
+                        connection.end(); 
                     }
             });
-        connection.end();        
     });
-}).listen(1337, '67.207.139.8');
+    nResponses++;
+}).listen(1337, 'localhost');
